@@ -31,10 +31,16 @@ if st.button("🔍 Buscar licitaciones"):
         st.warning("No se encontraron licitaciones en el rango de fechas.")
     else:
         df = pd.DataFrame(listado)
-        columnas = ["CodigoExterno", "Nombre", "FechaCierre", "MontoEstimado", "Comprador"]
-        st.success(f"{len(df)} licitaciones encontradas.")
-        st.dataframe(df[columnas])
-        
-        # Botón para descargar CSV
-        csv = df[columnas].to_csv(index=False).encode("utf-8")
-        st.download_button("📥 Descargar CSV", csv, file_name="licitaciones.csv")
+
+        # Mostrar columnas disponibles
+        st.subheader(f"🔢 {len(df)} licitaciones encontradas")
+        st.markdown("### 🧾 Columnas disponibles en el resultado:")
+        st.code(df.columns.tolist(), language="python")
+
+        # Mostrar tabla completa
+        st.markdown("### 📋 Resultado completo:")
+        st.dataframe(df)
+
+        # Descargar CSV
+        csv = df.to_csv(index=False).encode("utf-8")
+        st.download_button("📥 Descargar como CSV", csv, file_name="licitaciones.csv")
