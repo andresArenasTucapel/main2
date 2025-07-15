@@ -52,12 +52,13 @@ if st.button("🔍 Buscar licitaciones"):
                     if detalle.get("Listado"):
                         lic = detalle["Listado"][0]
                         st.markdown("### 📄 Resumen de Licitación")
-                        st.write(f"📌 **Código**: {lic['CodigoExterno']}")
-                        st.write(f"🏛️ **Organismo**: {lic['Comprador']['NombreOrganismo']}")
-                        st.write(f"📝 **Nombre**: {lic['Nombre']}")
-                        st.write(f"🗓️ **Fecha de publicación**: {lic['FechaPublicacion']}")
-                        st.write(f"🗓️ **Fecha de cierre**: {lic['FechaCierre']}")
-                        st.write(f"📂 **Estado**: {lic['Estado']}")
-                        st.write(f"🔗 [Ver bases y anexos]({lic['UrlPublicacion']})")
+                        for clave, valor in lic.items():
+                            # Si el valor es un diccionario (como 'Comprador'), lo desplegamos también
+                            if isinstance(valor, dict):
+                                st.markdown(f"**🔹 {clave}**:")
+                                for subclave, subvalor in valor.items():
+                                    st.write(f" • {subclave}: {subvalor}")
+                            else:
+                                st.write(f"**{clave}**: {valor}")
                     else:
                         st.error("No se pudo obtener el detalle.")
