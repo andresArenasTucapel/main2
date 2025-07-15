@@ -31,16 +31,24 @@ if st.button("🔍 Buscar licitaciones"):
         st.warning("No se encontraron licitaciones en el rango de fechas.")
     else:
         df = pd.DataFrame(listado)
+        st.success(f"{len(df)} licitaciones encontradas.")
 
-        # Mostrar columnas disponibles
-        st.subheader(f"🔢 {len(df)} licitaciones encontradas")
-        st.markdown("### 🧾 Columnas disponibles en el resultado:")
-        st.code(df.columns.tolist(), language="python")
+        for i, row in df.iterrows():
+            st.markdown("---")
+            st.write(f"**{row['CodigoExterno']}** — {row['Nombre']}")
+            st.write(f"🕓 Cierra: {row['FechaCierre']}")
+            st.write(f"💰 Monto estimado: {row.get('MontoEstimado', 'No informado')}")
+            boton = st.button(f"📄 Ver detalle", key=row['CodigoExterno'])
 
-        # Mostrar tabla completa
-        st.markdown("### 📋 Resultado completo:")
-        st.dataframe(df)
+            if boton:
+                detalle_url = "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json"
+                r = requests.get(detalle_url, params={"ticket": API_KEY, "codigo": row["CodigoExterno"]})
+                detalle = r.json()
 
-        # Descargar CSV
-        csv = df.to_csv(index=False).encode("utf-8")
-        st.download_button("📥 Descargar como CSV", csv, file_name="licitaciones.csv")
+                if detalle.get("Listado"):
+                    lic = detalle["Listado"][0]
+                    st.subheader(f"📄 Detalle de licitación {lic['CodigoExterno']}")
+                    for key, value in lic.items():
+                        st.write(f"**{key}**: {value}")
+                else:
+                    st.error("No se pudo obtener el detalle.")
