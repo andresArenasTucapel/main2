@@ -21,8 +21,6 @@ if st.button("🔍 Buscar licitaciones"):
     url = "https://api.mercadopublico.cl/servicios/v1/publico/licitaciones.json"
     params = {
         "ticket": API_KEY,
-        "fechaInicio": fecha_inicio,
-        "fechaFin": fecha_fin,
         "pagina": 1
     }
 
