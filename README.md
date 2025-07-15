@@ -1,2 +1,4 @@
 # main2
-prueba 2 de configuacion
+
+st.title("Hola mundo desde Streamlit")
+st.write("Esta es tu primera app desplegable 😄")
